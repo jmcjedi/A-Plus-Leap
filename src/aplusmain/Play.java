@@ -4,7 +4,7 @@ import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.lwjgl.input.Mouse;
+//import org.lwjgl.input.Mouse;
 import org.newdawn.slick.*;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
@@ -26,10 +26,11 @@ public class Play extends BasicGameState
   public static int nextLetterCheck = 0;
   public static boolean drawCheck = false;
   public static int checkCounter = 0;
-  //public static int counter2 = 0;
+  public static int inputLetter[][] = new int[1084][828];
+  public static int chalkTrail[][] = new int[1084][828];
   
   public static Image chalk, clear, check, draw, background, next, up, down, level1guides, 
-                      currentImage, data, chalkTrail, guides, guideAnimation, colorPickerImage, colorPickerTab,
+                      currentImage, data, chalkMark, chalkShadow, guides, guideAnimation, colorPickerImage, colorPickerTab,
                       startingArrow; 
   
   public static Image[] guideImagesUpper = new Image[4];
@@ -150,7 +151,8 @@ public class Play extends BasicGameState
     
     startingArrow = new Image("resources/images/start_here.png");
 
-    chalkTrail = new Image("resources/images/chalkTrail_white.png");
+    chalkMark = new Image("resources/images/chalkTrail_white.png");
+    chalkShadow = new Image("resources/images/chalk_shadow.png");
     chalk = new Image("resources/images/chalk_white.png"); 
     colorPickerTab = new Image("resources/images/chalk_tab.png");
     colorPickerImage = new Image("resources/images/chalk_selection.png");
@@ -222,6 +224,7 @@ public class Play extends BasicGameState
     //g.drawString(buttonpressed, 50, 100);
     //g.drawString("Accelerometer X: " + accelX + " Y: " + accelY + " Z: " + accelZ, 50, 120);
     //g.drawString("IR Camera X: " + irX + " Y: " + irY, 50, 140);
+    g.drawImage(chalkShadow, chalkX, chalkY);
     g.drawImage(chalk, chalkX, chalkY);
     
     int x, y;
@@ -229,9 +232,9 @@ public class Play extends BasicGameState
     {
       for (y = 0; y < 768; y++)
       {
-        if (Connect.chalkTrail[x][y] == 1)
+        if (chalkTrail[x][y] == 1)
         {
-          g.drawImage(chalkTrail, x, y);
+          g.drawImage(chalkMark, x, y);
           //g.fillOval((float)x, (float)y, 60, 60);
           //g.fillRect((float)x, (float)y, 8, 8);
         }
@@ -292,39 +295,37 @@ public class Play extends BasicGameState
       {
         offTrackPlay = true;
       }
-      accelX = Connect.accelX;
-      accelY = Connect.accelY;
-      accelZ = Connect.accelZ;
+      //accelX = Connect.accelX;
+      //accelY = Connect.accelY;
+      //accelZ = Connect.accelZ;
       
       double mappedX = (Connect.listener.x + 200.00) * 2.56;
-  	  double mappedY = 768 - ((Connect.listener.y * -1) + 80.00) * -2.844;
-  	
+      double mappedY = 768 - ((Connect.listener.y * -1) + 100.00) * -2.56;
+        
       irX = mappedX;
       if (irX < 0) irX = 0;
+        
       irY = mappedY;
       if (irY < 0) irY = 0;
-      
+        
       irZ = Connect.listener.z;
+      
       chalkX = (int)irX;
       chalkY = (int)irY;
     
-      buttonpressed = Connect.buttonpressed;
-      if (irZ < 0)
+      //System.out.println("irX = " + irX);
+      //System.out.println("irY = " + irY);
+      //System.out.println("irZ = " + irY);
+      
+      //buttonpressed = Connect.buttonpressed;
+      if (irZ < -30)
       {
-        /*try
-        {
-         Thread.sleep(50);
-      } catch (InterruptedException e1)
-      {
-        // TODO Auto-generated catch block
-        e1.printStackTrace();
-      }*/ 
-        Connect.chalkTrail[(int)irX][(int)irY] = 1;
+        chalkTrail[(int)irX][(int)irY] = 1;
         for (int x = 0; x < 60; x++)
         {
           for (int y = 0; y < 60; y++)
           {
-            Connect.inputLetter[(int)(Connect.irX + x)][(int)Connect.irY + y] = 1;
+            inputLetter[(int)(irX + x)][(int)irY + y] = 1;
           }
         }
         if(chalkY > 700 && chalkY < 745 && chalkX > 830 && chalkX < 974)
@@ -336,37 +337,43 @@ public class Play extends BasicGameState
           try
           {
             compareLetters();
-          } catch (InterruptedException e)
-          {e.printStackTrace();
+          } 
+          catch (InterruptedException e)
+          {
+            e.printStackTrace();
           }
         }
         else if(chalkY > 100 && chalkY < 260 && chalkX > 864 && chalkX < 974)
         {      
-            try
-            {
-              Thread.sleep(500);
-            } catch (InterruptedException e)
-            { e.printStackTrace();
-            }
-            pixelsToMatch = 0;
-            if (currentLetter == 8) currentLetter = 0;
-            else currentLetter++;
-            constructLetter();
-            justStarted = 0;
+          try
+          {
+            Thread.sleep(500);
+          } 
+          catch (InterruptedException e)
+          { 
+            e.printStackTrace();
+          }
+          pixelsToMatch = 0;
+          if (currentLetter == 8) currentLetter = 0;
+          else currentLetter++;
+          constructLetter();
+          justStarted = 0;
         }
         else if(chalkY > 523 && chalkY < 668 && chalkX > 774 && chalkX < 974)
         {      
-            try
-            {
-              Thread.sleep(500);
-            } catch (InterruptedException e)
-            { e.printStackTrace();
-            }
-            pixelsToMatch = 0;
-            if(upperLower==0) upperLower = 1;
-            else upperLower = 0;
-            constructLetter();
-            justStarted = 0;
+          try
+          {
+            Thread.sleep(500);
+          } 
+          catch (InterruptedException e)
+          { 
+            e.printStackTrace();
+          }
+          pixelsToMatch = 0;
+          if(upperLower==0) upperLower = 1;
+          else upperLower = 0;
+          constructLetter();
+          justStarted = 0;
         }
         else if(chalkY > 75 && chalkY < 120 && chalkX > 50 && chalkX < 230)
         {
@@ -450,7 +457,7 @@ public class Play extends BasicGameState
           } catch (IOException e)
           {
             e.printStackTrace();
-         }
+          }
         }
       }
     }
@@ -691,9 +698,11 @@ public class Play extends BasicGameState
     {
       for (y = 0; y < height; y++)
       {
+        //System.out.println("StandardLetter = " + standardLetter[x][y]);
+        //System.out.println("inputLetter = " + inputLetter[x][y]);
         if (standardLetter[x][y] == 1)
         {
-          if (standardLetter[x][y] == Connect.inputLetter[x+300][y+50])
+          if (standardLetter[x][y] == inputLetter[x+300][y+50])
           {
             totalPixels++;
             //int newX = x+300;
@@ -745,18 +754,18 @@ public class Play extends BasicGameState
   public static void clearTrail()
   {
     int x, y;
-    for (x = 0; x < 1024; x++)
+    for (x = 0; x < 1084; x++)
     {
-      for (y = 0; y < 768; y++)
+      for (y = 0; y < 828; y++)
       {
-        Connect.chalkTrail[x][y] = 0;
+        chalkTrail[x][y] = 0;
       }
     } 
     for (x = 0; x < 1084; x++)
     {
       for (y = 0; y < 828; y++)
       {
-        Connect.inputLetter[x][y] = 0;
+        inputLetter[x][y] = 0;
       }
     }
     letterStarted = false;
@@ -766,7 +775,7 @@ public class Play extends BasicGameState
   
   public static void changeColor() throws SlickException
   {
-    chalkTrail = new Image(chalkTrailOptions[colorChoice]);
+    chalkMark = new Image(chalkTrailOptions[colorChoice]);
     chalk = new Image(chalkOptions[colorChoice]); 
     colorPicker = false;
     clearTrail();

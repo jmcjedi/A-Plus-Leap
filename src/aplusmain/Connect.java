@@ -1,28 +1,16 @@
 package aplusmain;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
-
-import java.lang.Math;
 import com.leapmotion.leap.*;
-import com.leapmotion.leap.Gesture.State;
+
 
 public class Connect extends BasicGameState 
-{
-  
+{ 
   //new
   //public static WiiRemoteListener listener = null;
   //public static WiiRemote remote;
@@ -66,10 +54,8 @@ public class Connect extends BasicGameState
   int pixelArrayX[]= new int[424];
   int pixelArrayY[] = new int[424];
   int pixelArrayZ[] = new int[424];
-  Image chalk;
-  public static int chalkX, chalkY;
-  public static int chalkTrail[][] = new int[1024][1024];
-  public static int inputLetter[][] = new int[1084][1084];
+  Image intro, background;
+  
   public static String[] wheel_spokes = {"resources/images/spin1.png","resources/images/spin2.png",
                                          "resources/images/spin3.png","resources/images/spin4.png",
                                          "resources/images/spin5.png","resources/images/spin6.png",
@@ -91,8 +77,8 @@ public class Connect extends BasicGameState
   public static Image rotating_wheel; 
   public static Image checkMark;
   public static int wheel_spoke = 0;
-  public static boolean connectedPlay = false;
-  public static Sound getConnected;
+  //public static boolean connectedPlay = false;
+  //public static Sound getConnected;
   
   public Connect(int state) 
   {
@@ -101,35 +87,38 @@ public class Connect extends BasicGameState
   
   public void init(GameContainer container, StateBasedGame stategame) throws SlickException
   {
-    chalk = new Image("resources/images/chalk_white.png"); 
-    getConnected = new Sound("resources/sounds/getConnected.wav");
+    //chalk = new Image("resources/images/chalk_white.png"); 
+    //getConnected = new Sound("resources/sounds/getConnected.wav");
+	  background = new Image("resources/images/background_small.png");
+	  intro = new Image("resources/images/intro.png");
   }
   
   public void render(GameContainer container, StateBasedGame stategame, Graphics g) throws SlickException
   {
     rotating_wheel = new Image(wheel_spokes[wheel_spoke]); 
-    Image background = new Image("resources/images/background_small.png");
-    Image connect1 = new Image("resources/images/connect1.png");
-    Image connect2 = new Image("resources/images/connect2.png");
-    Image connectarrow = new Image("resources/images/connectarrow.png");
+    //Image background = new Image("resources/images/background_small.png");
+    //Image connect1 = new Image("resources/images/connect1.png");
+    //Image connect2 = new Image("resources/images/connect2.png");
+    //Image connectarrow = new Image("resources/images/connectarrow.png");
     Image checkMark = new Image(check_mark[checkCounter]);
     
     g.drawImage(background, 0, 0); 
-    //g.drawImage(connect1, 20, 134);
+    //g.drawImage(connect1, 20, 134); 
     //g.drawImage(connect2, 523, 134);
     //g.drawImage(connectarrow, 412, 284);
     //g.drawImage(rotating_wheel, 350, 200);
     
     if(connected==0)
     {
-      if (connectedPlay==false)
+      /*if (connectedPlay==false)
       {
         getConnected.play();
         connectedPlay = true;
-      }
-      g.drawImage(connect1, 20, 134);
-      g.drawImage(connect2, 523, 134);
-      g.drawImage(connectarrow, 412, 284);
+      }*/
+      //g.drawImage(connect1, 20, 134);
+      //g.drawImage(connect2, 523, 134);
+      //g.drawImage(connectarrow, 412, 284);
+      g.drawImage(intro, 0, 0);
       g.drawImage(rotating_wheel, 380, 150);
     }
     if(connected==1)
@@ -154,7 +143,7 @@ public class Connect extends BasicGameState
     //g.drawString("IR Camera X: " + irX + " Y: " + irY, 50, 140);
     //g.drawImage(chalk, chalkX, chalkY);
     
-    int x, y;
+    /*int x, y;
     for (x = 0; x < 1024; x++)
     {
       for (y = 0; y < 1024; y++)
@@ -165,7 +154,7 @@ public class Connect extends BasicGameState
         }
         
       }
-    } 
+    }*/
  
   }
   

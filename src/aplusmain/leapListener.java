@@ -8,7 +8,7 @@ package aplusmain;
 * between Leap Motion and you, your company or other organization.             *
 \******************************************************************************/
 
-import java.io.IOException;
+//import java.io.IOException;
 import java.lang.Math;
 import com.leapmotion.leap.*;
 import com.leapmotion.leap.Gesture.State;
@@ -17,13 +17,14 @@ class leapListener extends Listener {
 	double x = 0.0;
 	double y = 0.0;
 	double z = 0.0;
+	boolean debug = false;
 	
     public void onInit(Controller controller) {
-        System.out.println("Initialized");
+        if (debug) System.out.println("Initialized");
     }
 
     public void onConnect(Controller controller) {
-        System.out.println("Connected");
+        if (debug) System.out.println("Connected");
         controller.enableGesture(Gesture.Type.TYPE_SWIPE);
         controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
         controller.enableGesture(Gesture.Type.TYPE_SCREEN_TAP);
@@ -32,17 +33,17 @@ class leapListener extends Listener {
 
     public void onDisconnect(Controller controller) {
         //Note: not dispatched when running in a debugger.
-        System.out.println("Disconnected");
+      if (debug) System.out.println("Disconnected");
     }
 
     public void onExit(Controller controller) {
-        System.out.println("Exited");
+      if (debug) System.out.println("Exited");
     }
 
     public void onFrame(Controller controller) {
         // Get the most recent frame and report some basic information
         Frame frame = controller.frame();
-        System.out.println("Frame id: " + frame.id()
+        if (debug) System.out.println("Frame id: " + frame.id()
                          + ", timestamp: " + frame.timestamp()
                          + ", hands: " + frame.hands().count()
                          + ", fingers: " + frame.fingers().count()
@@ -69,12 +70,12 @@ class leapListener extends Listener {
                     avgPos = avgPos.plus(finger.tipPosition());
                 }
                 avgPos = avgPos.divide(fingers.count());
-                System.out.println("Hand has " + fingers.count()
+                if (debug) System.out.println("Hand has " + fingers.count()
                                  + " fingers, average finger tip position: " + avgPos);
             }
 
             // Get the hand's sphere radius and palm position
-            System.out.println("Hand sphere radius: " + hand.sphereRadius()
+            if (debug) System.out.println("Hand sphere radius: " + hand.sphereRadius()
                              + " mm, palm position: " + hand.palmPosition());
 
             // Get the hand's normal vector and direction
@@ -82,7 +83,7 @@ class leapListener extends Listener {
             Vector direction = hand.direction();
 
             // Calculate the hand's pitch, roll, and yaw angles
-            System.out.println("Hand pitch: " + Math.toDegrees(direction.pitch()) + " degrees, "
+            if (debug) System.out.println("Hand pitch: " + Math.toDegrees(direction.pitch()) + " degrees, "
                              + "roll: " + Math.toDegrees(normal.roll()) + " degrees, "
                              + "yaw: " + Math.toDegrees(direction.yaw()) + " degrees");
         }
@@ -111,7 +112,7 @@ class leapListener extends Listener {
                         sweptAngle = (circle.progress() - previousUpdate.progress()) * 2 * Math.PI;
                     }
 
-                    System.out.println("Circle id: " + circle.id()
+                    if (debug) System.out.println("Circle id: " + circle.id()
                                + ", " + circle.state()
                                + ", progress: " + circle.progress()
                                + ", radius: " + circle.radius()
@@ -120,7 +121,7 @@ class leapListener extends Listener {
                     break;
                 case TYPE_SWIPE:
                     SwipeGesture swipe = new SwipeGesture(gesture);
-                    System.out.println("Swipe id: " + swipe.id()
+                    if (debug) System.out.println("Swipe id: " + swipe.id()
                                + ", " + swipe.state()
                                + ", position: " + swipe.position()
                                + ", direction: " + swipe.direction()
@@ -128,26 +129,26 @@ class leapListener extends Listener {
                     break;
                 case TYPE_SCREEN_TAP:
                     ScreenTapGesture screenTap = new ScreenTapGesture(gesture);
-                    System.out.println("Screen Tap id: " + screenTap.id()
+                    if (debug) System.out.println("Screen Tap id: " + screenTap.id()
                                + ", " + screenTap.state()
                                + ", position: " + screenTap.position()
                                + ", direction: " + screenTap.direction());
                     break;
                 case TYPE_KEY_TAP:
                     KeyTapGesture keyTap = new KeyTapGesture(gesture);
-                    System.out.println("Key Tap id: " + keyTap.id()
+                    if (debug) System.out.println("Key Tap id: " + keyTap.id()
                                + ", " + keyTap.state()
                                + ", position: " + keyTap.position()
                                + ", direction: " + keyTap.direction());
                     break;
                 default:
-                    System.out.println("Unknown gesture type.");
+                    if (debug) System.out.println("Unknown gesture type.");
                     break;
             }
         }
 
         if (!frame.hands().empty() || !gestures.empty()) {
-            System.out.println();
+            if (debug) System.out.println();
         }
     }
 }

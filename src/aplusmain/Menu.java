@@ -1,7 +1,5 @@
 package aplusmain;
 
-import java.io.IOException;
-
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
 
@@ -14,7 +12,7 @@ public class Menu extends BasicGameState
   public static double irY = 0;
   public static double irZ = 0;
   public static String buttonpressed = "";
-  public static Image chalk, button1, button2, button3;
+  public static Image chalk, chalkShadow, button1, button2, button3;
   
   public Menu(int state)
   {
@@ -25,6 +23,7 @@ public class Menu extends BasicGameState
   public void init(GameContainer container, StateBasedGame stategame) throws SlickException
   {
     chalk = new Image("resources/images/chalk_white.png");
+    chalkShadow = new Image("resources/images/chalk_shadow.png");
     button1 = new Image("resources/images/button1.png");
     button2 = new Image("resources/images/button2.png");
     button3 = new Image("resources/images/button3.png");
@@ -46,6 +45,7 @@ public class Menu extends BasicGameState
     g.drawImage(button1, 325, 295);
     g.drawImage(button2, 325, 445);
     g.drawImage(button3, 325, 595);
+    g.drawImage(chalkShadow, chalkX, chalkY);
     g.drawImage(chalk, chalkX, chalkY);
     
   }
@@ -53,16 +53,16 @@ public class Menu extends BasicGameState
   // method for updating the screen at regular intervals when things change
   public void update(GameContainer container, StateBasedGame stategame, int delta) throws SlickException
   {
-	double mappedX = (Connect.listener.x + 200.00) * 2.56;
-	double mappedY = 768 - ((Connect.listener.y * -1) + 80.00) * -2.844;
-	
+    double mappedX = (Connect.listener.x + 200.00) * 2.56;
+    double mappedY = 768 - ((Connect.listener.y * -1) + 100.00) * -2.56;
+  	  
     irX = mappedX;
+    if (irX < 0) irX = 0;
+      
     irY = mappedY;
+    if (irY < 0) irY = 0;
+      
     irZ = Connect.listener.z;
-    
-    System.out.println("Listener.x = " + Connect.listener.x);
-    System.out.println("Listener.y = " + Connect.listener.y);
-    System.out.println("Listener.z = " + Connect.listener.z);
     
     chalkX = (int)irX;
     chalkY = (int)irY;
@@ -70,7 +70,7 @@ public class Menu extends BasicGameState
     buttonpressed = Connect.buttonpressed;
     
     //if (buttonpressed=="A")
-    if (irZ < 0)
+    if (irZ < -30)
     {
       /*try
       {
@@ -88,7 +88,7 @@ public class Menu extends BasicGameState
       {
         stategame.enterState(3);
       }
-      else if(chalkY > 595 && 745 < 700 && chalkX > 325 && chalkX < 700)
+      else if(chalkY > 595 && chalkY < 700 && chalkX > 325 && chalkX < 700)
       {
         stategame.enterState(3);
       }
